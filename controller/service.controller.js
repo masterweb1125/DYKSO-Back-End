@@ -10,7 +10,12 @@ export const addService = async (req, res) => {
   const { userId, zipCode, service_info, attachment } = req.body;
  
   try {
-      const createService = new serviceModel(req.body);
+      const createService = new serviceModel({
+          userId: userId,
+          zipCode: zipCode,
+          service_info: service_info,
+          attachment: attachment
+      });
       await createService.save();
       res.status(200).json({ success: true, message: "service added successfully", service:createService });
 
