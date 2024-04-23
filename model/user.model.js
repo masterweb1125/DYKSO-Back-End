@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please provide your email address"],
     },
     address: { type: String },
-    profile_image: { type: String },
+    profileImage: { type: String },
   },
   { timestamps: true }
 );

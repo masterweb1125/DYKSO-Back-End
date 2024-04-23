@@ -5,13 +5,11 @@ import dotenv from "dotenv";
 import authRouter from "./router/auth.route.js";
 import { dbConnection } from "./db/connect.js";
 import serviceRouter from "./router/service.route.js";
-import path from 'path';
 
 dotenv.config();
 const app = express();
 const DB_URL = process.env.DB_URL;
 const PORT = process.env.PORT;
-const __dirname = path.resolve();
 
 // ----- connecting to database -----
 dbConnection(DB_URL);
@@ -25,17 +23,15 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
 
+// ---- Default/home page route --------
+app.get("/", (req, res) => {
+  res.send("WELCOME TO THE 'DYKSO' PROJECT SERVER 👋");
+});
+
 // ------ Custom middlewares --------- 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/service", serviceRouter);
 
-// if (process.env.NODE_ENV === "production") {
-  app.use("/", express.static(path.join(__dirname, "public", "build")));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "public", "build", "index.html"));
-  });
-// }
 
 // ----- Errors handler ------
 app.all("*", (req, res) => {

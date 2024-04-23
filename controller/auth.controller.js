@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { userModel } from "../model/user.model.js";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 
 import { SignIn_validate, SignUp_validate } from "../Schema_validation/auth.validation.js";
 import dotenv from "dotenv";
@@ -39,7 +40,7 @@ export const SignUp = async (
       );
       res.status(200).json({success: true, status: 200, data: createUser, token: token});
     } else {
-      res.status(400).json({success: false, status: 400, data: "email address has already registered!" }); send();
+      res.status(400).json({success: false, status: 400, data: "email address has already registered!" });
     }
   } catch (err) {
     // next(err);
@@ -104,4 +105,49 @@ export const SignIn = async (
   }
 };
 
+// ----- Email Verification -----
+export const emailVerification = async (req, res) => {
+  const { email, OTP } = req.body;
+  console.log("req.body: ", req.body);
+  // Create a transporter object.
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "hikmatkhanbangash@gmail.com",
+      pass: "lzlj nvhl opos neir",
+    },
+  });
+  const mailOptions = {
+    from: "hikmatkhanbangash@gmail.com",
+    to: email,
+    subject: "Email verification",
+    html: `
+    <p>Thank you for taking the time to register with us! To ensure the security of your account and the integrity of our platform, we require a quick verification step.</p>
+     
+    <p>Your One-Time Passcode (OTP) to verify your email is: <strong>${OTP}</strong>  </p>
+    
+    <p>Please enter this code in the verification field on our website to confirm your email address.</p>
+    
+  `,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      res.status(500).json({
+        success: false,
+        status: 500,
+        error: error,
+        message: "Something went wrong!",
+      });
+    } else {
+      console.log("Email sent!");
+      res.status(200).json({
+        success: true,
+        status: 200,
+        message: "email send successfully!",
+      });
+    }
+  });
+};
 
