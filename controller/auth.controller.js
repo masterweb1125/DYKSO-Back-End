@@ -110,11 +110,13 @@ export const emailVerification = async (req, res) => {
   const { email, OTP } = req.body;
   console.log("req.body: ", req.body);
   // Create a transporter object.
-  const transporter = nodemailer.createTransport({
+  const transporter = nodemailer.createTransport({ 
     service: "gmail",
+    port: 465,
+    secure: true, // Enable secure connection (SSL/TLS)
     auth: {
       user: "hikmatkhanbangash@gmail.com",
-      pass: "lzlj nvhl opos neir",
+      pass: "amhg clvc grio rqnl",
     },
   });
   const mailOptions = {

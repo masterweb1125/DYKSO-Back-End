@@ -5,11 +5,10 @@ import nodemailer from "nodemailer";
 
 export const addService = async (req, res) => {
     // first we need to validate the data before saving it in DB
-  const { error } = serviceSchema_validation(req.body);
-  if (error) return res.send(error.details[0].message);
+    console.log(req.body); 
+  // const { error } = serviceSchema_validation(req.body);
+  // if (error) return res.send(error.details[0].message);
 
-  console.log(req.body); 
-  const { userId, zipCode, service_info, attachment } = req.body;
  
   try {
       const createService = new serviceModel(req.body);
@@ -17,6 +16,7 @@ export const addService = async (req, res) => {
       res.status(200).json({ success: true, message: "service added successfully", service:createService });
 
   } catch (err) {
+    console.log("service created error: ", err.message)
     res.status(500).json({
       status: 500,
       success: false,

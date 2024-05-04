@@ -21,11 +21,9 @@ const serviceSchema = new mongoose.Schema(
     serviceTitle: { type: String, required: [true, "service is required"] },
     service_info: {
       type: String,
-      required: [true, "Please provide your service information"],
     },
     attachment: {
       type: String,
-      required: [true, "Please provide your attachment"],
     },
   },
   { timestamps: true }
