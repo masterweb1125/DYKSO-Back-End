@@ -2,10 +2,13 @@ import bcrypt from "bcryptjs";
 import { userModel } from "../model/user.model.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
-
 import { SignIn_validate, SignUp_validate } from "../Schema_validation/auth.validation.js";
+import sgMail from "@sendgrid/mail";
 import dotenv from "dotenv";
 dotenv.config();
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 
 
 export const SignUp = async (
@@ -105,51 +108,89 @@ export const SignIn = async (
   }
 };
 
-// ----- Email Verification -----
+// ----- Email Verification using nodemailer -----
+// export const emailVerification = async (req, res) => {
+//   const { email, OTP } = req.body;
+//   console.log("req.body: ", req.body);
+//   // Create a transporter object.
+//   const transporter = nodemailer.createTransport({ 
+//     service: "gmail",
+//     port: 465,
+//     secure: true, // Enable secure connection (SSL/TLS)
+//     auth: {
+//       user: "hikmatkhanbangash@gmail.com",
+//       pass: "amhg clvc grio rqnl",
+//     },
+//   });
+//   const mailOptions = {
+//     from: "hikmatkhanbangash@gmail.com",
+//     to: email,
+//     subject: "Email verification",
+//     html: `
+//     <p>Thank you for taking the time to register with us! To ensure the security of your account and the integrity of our platform, we require a quick verification step.</p>
+     
+//     <p>Your One-Time Passcode (OTP) to verify your email is: <strong>${OTP}</strong>  </p>
+    
+//     <p>Please enter this code in the verification field on our website to confirm your email address.</p>
+    
+//   `,
+//   };
+
+//   transporter.sendMail(mailOptions, (error, info) => {
+//     if (error) {
+//       console.log(error);
+//       res.status(500).json({
+//         success: false,
+//         status: 500,
+//         error: error,
+//         message: "Something went wrong!",
+//       });
+//     } else {
+//       console.log("Email sent!");
+//       res.status(200).json({
+//         success: true,
+//         status: 200,
+//         message: "email send successfully!",
+//       });
+//     }
+//   });
+// };
+
+
+// ===   SendGrid sending email ---------
+
 export const emailVerification = async (req, res) => {
   const { email, OTP } = req.body;
   console.log("req.body: ", req.body);
-  // Create a transporter object.
-  const transporter = nodemailer.createTransport({ 
-    service: "gmail",
-    port: 465,
-    secure: true, // Enable secure connection (SSL/TLS)
-    auth: {
-      user: "hikmatkhanbangash@gmail.com",
-      pass: "amhg clvc grio rqnl",
-    },
-  });
-  const mailOptions = {
-    from: "hikmatkhanbangash@gmail.com",
+  const SenderEmail = "miyoshiyarou@gmail.com";
+
+  const msg = {
     to: email,
+    from: SenderEmail,
     subject: "Email verification",
     html: `
-    <p>Thank you for taking the time to register with us! To ensure the security of your account and the integrity of our platform, we require a quick verification step.</p>
-     
     <p>Your One-Time Passcode (OTP) to verify your email is: <strong>${OTP}</strong>  </p>
     
-    <p>Please enter this code in the verification field on our website to confirm your email address.</p>
+   <p>Please enter this code in the verification field on our website to confirm your email address.</p>
     
   `,
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Email sent successfully"),
+        res.status(200).json({
+          success: true,
+          message: "OTP send successfully",
+        });
+    })
+    .catch((error) => {
+      console.error(error.toString());
       res.status(500).json({
         success: false,
-        status: 500,
+        message: "email sending failed",
         error: error,
-        message: "Something went wrong!",
       });
-    } else {
-      console.log("Email sent!");
-      res.status(200).json({
-        success: true,
-        status: 200,
-        message: "email send successfully!",
-      });
-    }
-  });
+    });
 };
-
