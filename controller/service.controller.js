@@ -32,10 +32,11 @@ export const addService = async (req, res) => {
 
 // fetching all services 
 export const fetchServices = async (req, res) => {
-  const zipCode = req.params.zipCode;
   const userId = req.params.id;
   try {
-       const services = await serviceModel.find({userId: { $ne: userId } });
+    // const services = await serviceModel.find({ userId: { $ne: userId } });
+     const services = await serviceModel.find();
+     res;
     res
       .status(200)
       .json({
@@ -93,7 +94,7 @@ export const fetchSingleService = async (req, res) => {
 export const sendEmailQuery = async (req, res) => {
   const { sender, reciever, subject, body } = req.body;
   console.log("req.body: ", req.body);
-  const SenderEmail = "miyoshiyarou@gmail.com";
+  const SenderEmail = "engrhikmatbangash@gmail.com";
 
   const msg = {
     from: SenderEmail,
