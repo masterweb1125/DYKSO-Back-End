@@ -93,7 +93,7 @@ export const fetchSingleService = async (req, res) => {
 export const sendEmailQuery = async (req, res) => {
   const { sender, reciever, subject, body } = req.body;
   console.log("req.body: ", req.body);
-  const SenderEmail = "engrhikmatbangash@gmail.com";
+  const SenderEmail = "miyoshiyarou@gmail.com";
 
   const msg = {
     from: SenderEmail,
