@@ -1,6 +1,5 @@
 import { serviceSchema_validation } from "../Schema_validation/serviceSchema.validation.js";
 import { serviceModel } from "../model/service.model.js";
-import nodemailer from "nodemailer";
 import sgMail from "@sendgrid/mail";
 import dotenv from "dotenv";
 dotenv.config();

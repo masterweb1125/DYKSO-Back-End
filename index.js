@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import authRouter from "./router/auth.route.js";
 import { dbConnection } from "./db/connect.js";
 import serviceRouter from "./router/service.route.js";
+import userRouter from "./router/user.route.js";
 
 dotenv.config();
 const app = express();
@@ -31,6 +32,7 @@ app.get("/", (req, res) => {
 // ------ Custom middlewares --------- 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/service", serviceRouter);
+app.use("/api/v1/user", userRouter);
 
 
 // ----- Errors handler ------
